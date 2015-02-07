@@ -7,11 +7,11 @@
 	<script src="http://code.highcharts.com/highcharts.js"></script>
 </head>
 <body>
-<div id="graph-temp"></div>
+<div id="hour-graph"></div>
 </body>
 <script>
 
-function drawGraph(allData, sensorData){
+function drawGraph(allData, sensorData, graphId){
 	allData = JSON.parse(allData);
 	sensorData = JSON.parse(sensorData);
 
@@ -38,10 +38,12 @@ function drawGraph(allData, sensorData){
 	}
 
 	var anomalyScores = []
+	var anomalyScores2 = []
 
 	for(var z=0; z<allData.readings.length; z++){
 		var reading = allData.readings[z];
 		anomalyScores.push([parseInt(reading.time)*1000, reading.anomalyScore]);
+		anomalyScores2.push([parseInt(reading.time)*1000, reading.anomalyScore2])
 	}
 	timeSeries.push({
 	    name: "Anomaly Score",
@@ -54,9 +56,20 @@ function drawGraph(allData, sensorData){
 	    zIndex: 0
      });
 
+	timeSeries.push({
+	    name: "Anomaly Score 2",
+	    data: anomalyScores2,
+	    yAxis:1,
+	    tooltip: {
+	        valueSuffix: ''
+	    },
+	    type: 'column',
+	    zIndex: 0
+     });
+
 
 	$(function () {
-	    $('#graph-temp').highcharts({
+	    $(graphId).highcharts({
 	        chart: {
 	            type: 'line'
 	        },
@@ -86,8 +99,8 @@ function drawGraph(allData, sensorData){
 	        		text: 'Anomaly Score'
 	        	},
 	        	min: 0,
-	        	opposite: true,
-	        	tickInterval: 100
+	        	opposite: true
+	        	//tickInterval: 100
 	        }],
 	        tooltip: {
 	            shared: true
@@ -107,13 +120,13 @@ function drawGraph(allData, sensorData){
 }
 
 
-$.get("http://178.62.40.4/api/readings-unixtime", {start: (Math.floor(Date.now() / 1000)-(60*60*3)).toString()})
+$.get("http://178.62.40.4/api/readings-unixtime", {start: (Math.floor(Date.now() / 1000)-(60*60*1)).toString()})
 	.done(function(data){
 		//console.log(data);
 		var tempData = data;
 		$.get("http://178.62.40.4/api/sensors").
 			done(function(data){
-				drawGraph(tempData, data);
+				drawGraph(tempData, data, "#hour-graph");
 			});
 	});
 
