@@ -1,0 +1,16 @@
+.modal-content{
+	padding:10px;
+}
+.modal-content td{
+	padding-right: 5px;
+}
+.modal-content input{
+	padding-left: 10px;
+}
+
+#datepicker{
+	width:245px;
+	background-color: black;
+	color:white;
+	padding:15px;
+}

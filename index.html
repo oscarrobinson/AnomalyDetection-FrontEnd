@@ -4,59 +4,162 @@
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" / >
 	<title>Temp Visualisation</title>
 	<link href="css/bootstrap.min.css" rel="stylesheet">
-	<style>
-		.modal-content{
-			padding:10px;
-		}
-		.modal-content td{
-			padding-right: 5px;
-		}
-		.modal-content input{
-			padding-left: 10px;
-		}
-	</style>
+    <link href="css/sb-admin.css" rel="stylesheet">
+    <link href="css/plugins/morris.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="css/custom.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div id="feedback-modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-     	<h2>Give Feedback</h2>
-     		<table>
-     			<tr>
-     				<td><h4>Current Classification: </h4></td>
-     				<td><h4><div id="modal-classification"></div></h4></td>
-     			</tr>
-     			<tr>
-     				<td><h4>Desired Classification: </h4></td>
-     				<td>
-	     				<h4><div id="modal-feedback"></div></h4>
-	     				<form action="" class="form-inline" id="feedback-selection">
-							<input type="radio" name="feedback-radio" value="green">Green
-							<input type="radio" name="feedback-radio" value="amber">Amber
-							<input type="radio" name="feedback-radio" value="red">Red
-						</form>
-     				</td>
-     			</tr>
-     			<tr>
-     				<td><h4>Anomaly Score: </h4></td>
-     				<td><div id="modal-anomalyscore"></div></td>
-     			</tr>
-    		</table>
-    </div>
-  </div>
-</div>
-<div id="hour-graph"></div>
-<div id="day-graph"></div>
+	<div id="wrapper">
+		<!-- NAVIGATION -->
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+	            <span class="sr-only">Toggle navigation</span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	        </button>
+	        <a class="navbar-brand" href="index.html">Anomaly Detector</a>
+	    </div>
+	    <!-- Top Menu Items -->
+	    <ul class="nav navbar-right top-nav">
+	        <li class="dropdown">
+	            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
+	            <ul class="dropdown-menu alert-dropdown">
+	                <li>
+	                    <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
+	                </li>
+	                <li>
+	                    <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
+	                </li>
+	                <li>
+	                    <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
+	                </li>
+	                <li>
+	                    <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
+	                </li>
+	                <li>
+	                    <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
+	                </li>
+	                <li>
+	                    <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
+	                </li>
+	                <li class="divider"></li>
+	                <li>
+	                    <a href="#">View All</a>
+	                </li>
+	            </ul>
+	        </li>
+	        <li class="dropdown">
+	            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Dummy User <b class="caret"></b></a>
+	            <ul class="dropdown-menu">
+	                <li>
+	                    <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+	                </li>
+	                <li>
+	                    <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
+	                </li>
+	                <li>
+	                    <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
+	                </li>
+	                <li class="divider"></li>
+	                <li>
+	                    <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+	                </li>
+	            </ul>
+	        </li>
+	    </ul>
+	    <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+	    <div class="collapse navbar-collapse navbar-ex1-collapse">
+	        <ul class="nav navbar-nav side-nav">
+	        	<!-- add  class="active" to li to make fixed black-->
+	            <li>
+	                <a href="index.html"><i class="fa fa-fw fa-dashboard"></i>Latest Readings</a>
+	            </li>
+	            <li>
+	                <a href="javascript:;" data-toggle="collapse" data-target="#date"><i class="fa fa-fw fa-calendar"></i> Day View<i class="fa fa-fw fa-caret-down"></i></a>
+	                <ul id="date" class="collapse">
+	                    <div id="datepicker"></div>
+	                </ul>
+	            </li>
+	        </ul>
+	    </div>
+	    <!-- /.navbar-collapse -->
+	</nav>
 
+	<!-- FEEDBACK MODAL -->
+	<div id="feedback-modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	     	<h2>Give Feedback</h2>
+	     		<table>
+	     			<tr>
+	     				<td><h4>Current Classification: </h4></td>
+	     				<td><h4><div id="modal-classification"></div></h4></td>
+	     			</tr>
+	     			<tr>
+	     				<td><h4>Desired Classification: </h4></td>
+	     				<td>
+		     				<h4><div id="modal-feedback"></div></h4>
+		     				<form action="" class="form-inline" id="feedback-selection">
+								<input type="radio" name="feedback-radio" value="green">Green
+								<input type="radio" name="feedback-radio" value="amber">Amber
+								<input type="radio" name="feedback-radio" value="red">Red
+							</form>
+	     				</td>
+	     			</tr>
+	     			<tr>
+	     				<td><h4>Anomaly Score: </h4></td>
+	     				<td><div id="modal-anomalyscore"></div></td>
+	     			</tr>
+	    		</table>
+	    </div>
+	  </div>
+	</div>
+
+
+	<!-- PAGE CONTENT -->
+	<div id="page-wrapper">
+		<div class="container-fluid">
+			<div id="graph-container"></div>
+			<div id="day-graph-container"></div>
+		</div>
+	<div>
+</div>
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/graphing.js"></script>
+<script type="text/javascript" src="js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript">
-console.log(displayGraph);
+$('#datepicker').datepicker({
+    endDate: "today",
+    todayHighlight: true,
+}).on('changeDate', function(e){
+		console.log(e.date.getTime()/1000);
+		var dateString = e.date.getDate().toString()+"-"+(e.date.getMonth()+1).toString()+"-"+e.date.getFullYear().toString();
+        displayGraph((e.date.getTime()/1000).toString(), ((e.date.getTime()/1000)+(24*60*60)).toString(), "#day-graph-container", dateString);
+    });
+
+function getStartOfDay(year,month,date,getNow){
+	if(getNow){
+		var now = new Date();
+		return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+	}
+	else{
+		return new Date(year, month, date);
+	}
+}
+
+
+
+
 $(document).ready(function() {
-	displayGraph((Date.now()/1000-60*60).toString(), (Date.now()/1000).toString(), "#hour-graph", "Last Hour");
-	displayGraph((Date.now()/1000-60*60*24).toString(), (Date.now()/1000).toString(), "#day-graph", "Last Day");
+	displayGraph((Date.now()/1000-60*60).toString(), (Date.now()/1000).toString(), "#graph-container", "Last Hour");
+	displayGraph((getStartOfDay(1,1,1,true)/1000).toString(), (Date.now()/1000).toString(), "#day-graph-container", "Today");
 });
 </script>
 </body>

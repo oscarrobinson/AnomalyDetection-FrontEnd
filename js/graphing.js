@@ -76,8 +76,11 @@ function drawGraph(allData, sensorData, thresholds, graphId, graphTitle){
 
 	$(function () {
 	    $(graphId).highcharts({
+	    	credits:{
+	    		enabled: false
+	    	},
 	        chart: {
-	            type: 'line'
+	            type: 'line',
 	        },
 	        title: {
 	            text: graphTitle
@@ -105,7 +108,6 @@ function drawGraph(allData, sensorData, thresholds, graphId, graphTitle){
 	        		text: 'Anomaly Score'
 	        	},
 	        	min: 0,
-	        	max: 1,
 	        	opposite: true
 	        	//tickInterval: 100
 	        }],
