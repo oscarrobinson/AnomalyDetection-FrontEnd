@@ -14,3 +14,19 @@
 	color:white;
 	padding:15px;
 }
+
+#graph-container{
+	height:250px;
+}
+
+#alert-inline{
+	display:inline;
+}
+
+#alert-inline .label {
+	margin-right: 5px;
+}
+
+#highchart-modal{
+	max-width: 800px;
+}

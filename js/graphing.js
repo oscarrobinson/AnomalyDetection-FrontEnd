@@ -83,7 +83,12 @@ function drawGraph(allData, sensorData, thresholds, graphId, graphTitle){
 	            type: 'line',
 	        },
 	        title: {
-	            text: graphTitle
+	            text: graphTitle,
+	            align: 'left',
+	            style: {
+	            	'font-weight':'bold',
+	            	'font-size':'20pt'
+	            }
 	        },
 	        subtitle: {
 	            text: ''
@@ -126,8 +131,11 @@ function drawGraph(allData, sensorData, thresholds, graphId, graphTitle){
 	        			events: {
 	        				click: function (e) {
 	        					var reading = this;
+	        					var index = reading.index;
+	        					var chart=$(graphId).highcharts();
+	        					var anomScore = chart.series[chart.series.length-1].data[index].y
 	        					$('#modal-classification').html(function(){
-	        						return getClassificationLabel(reading.color)
+	        						return getClassificationLabel(chart.series[chart.series.length-1].data[index].color)
 	        					});
 
 	        					$.get("http://178.62.40.4/api/readings/getone?time="+(reading.x/1000))
@@ -135,13 +143,12 @@ function drawGraph(allData, sensorData, thresholds, graphId, graphTitle){
 											var readingDB = JSON.parse(data);
 											$('#modal-feedback').html(getClassificationLabel(readingDB.feedback));
 										});
-	        					$('#modal-anomalyscore').html(reading.y);
+	        					$('#modal-anomalyscore').html(anomScore);
 	        					$('#feedback-modal').modal('show');
 	        					$( "#feedback-selection" ).change(function() {
 								  var feedback_val = $("input[name='feedback-radio']:checked").val();
 								  $('#modal-feedback').html(getClassificationLabel(feedback_val));
 								  var timeUnix = (reading.x/1000).toString();
-								  console.log(feedback_val);
 								  var postdata = { time: timeUnix, feedback: feedback_val};
 								  $.post( "http://178.62.40.4/api/feedback", JSON.stringify(postdata) );
 								});
